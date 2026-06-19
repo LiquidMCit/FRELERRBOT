@@ -13,6 +13,7 @@ const CATEGORIES = {
   player:  { label: 'Segnala un Player', emoji: '📢', description: 'Segnala un utente del server' },
   bug:     { label: 'Segnala un Bug', emoji: '🐛', description: 'Hai trovato un bug?' },
   collab:  { label: 'Collaborazione', emoji: '🤝', description: 'Proposte di collaborazione' },
+  live:    { label: 'Live', emoji: '🔴', description: 'Segnalazione o domanda sulla live' },
 };
 
 async function loadTickets() {
@@ -76,7 +77,7 @@ function buildStaffButtons(taken = false, takerId = null) {
       .setLabel(taken ? `Preso da ${takerId ?? ''}` : 'Prendi')
       .setStyle(taken ? ButtonStyle.Secondary : ButtonStyle.Primary)
       .setDisabled(taken),
-    new ButtonBuilder().setCustomId('ticket_close').setLabel('𝗖𝗛𝗜𝗨𝗗𝗜').setStyle(ButtonStyle.Danger),
+    new ButtonBuilder().setCustomId('ticket_close').setLabel('Chiudi').setStyle(ButtonStyle.Danger),
   );
 }
 
@@ -117,6 +118,21 @@ async function createTicketChannel(guild, creator, category, formData) {
     ],
   });
 
+  if (category === 'live') {
+    const rulesEmbed = new EmbedBuilder()
+      .setColor(0xe74c3c)
+      .setTitle('🔴 Regole della Live')
+      .setDescription([
+        '**1.** 🤬 Niente bestemmie o parolacce',
+        '**2.** 🤝 Sii educato con tutti, streamer compreso',
+        '**3.** 🔇 Non nominare persone vicine a Frelerr',
+        '**4.** 🔒 Non fare riferimento alla vita privata di Frelerr',
+        '',
+        '> ⚠️ Chi non rispetta le regole riceve un **ban temporaneo** su Twitch e Discord.',
+      ].join('\n'))
+      .setFooter({ text: 'FrelerrBOT • Live Rules' });
+    await channel.send({ embeds: [rulesEmbed] });
+  }
   await channel.send({ embeds: [buildSummaryEmbed(category, formData, creator)], components: [buildStaffButtons(false)] });
 
   await supabase.from('tickets').insert({

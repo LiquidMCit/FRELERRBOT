@@ -91,6 +91,11 @@ module.exports = {
           { id: 'tipo', label: 'Tipo di collaborazione', style: TextInputStyle.Short },
           { id: 'descrizione', label: 'Descriviti brevemente', style: TextInputStyle.Paragraph },
         ],
+        live: [
+          { id: 'tipo', label: 'Segnalazione o domanda?', style: TextInputStyle.Short },
+          { id: 'descrizione', label: 'Descrivi', style: TextInputStyle.Paragraph },
+          { id: 'username', label: 'Username del segnalato (se segnalazione)', style: TextInputStyle.Short, required: false },
+        ],
       };
 
       modal.addComponents(
@@ -167,7 +172,7 @@ module.exports = {
         const dmButtons = new ActionRowBuilder().addComponents(
           new ButtonBuilder().setCustomId('temp_dm_edit').setLabel('Modifica').setEmoji('✏️').setStyle(ButtonStyle.Primary),
           new ButtonBuilder().setCustomId('temp_dm_invite').setLabel('Invita').setEmoji('➕').setStyle(ButtonStyle.Success),
-          new ButtonBuilder().setCustomId('temp_dm_delete').setLabel('𝗘𝗟𝗜𝗠𝗜𝗡𝗔').setEmoji('🗑️').setStyle(ButtonStyle.Danger),
+          new ButtonBuilder().setCustomId('temp_dm_delete').setLabel('Elimina').setEmoji('🗑️').setStyle(ButtonStyle.Danger),
         );
         await interaction.user.send({ embeds: [dmEmbed], components: [dmButtons] });
       } catch {}
@@ -224,7 +229,7 @@ module.exports = {
 
       const staffButtons = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId(`unban_accept_${interaction.user.id}`).setLabel('Accetta').setEmoji('✅').setStyle(ButtonStyle.Success),
-        new ButtonBuilder().setCustomId(`unban_reject_${interaction.user.id}`).setLabel('𝗥𝗜𝗙𝗜𝗨𝗧𝗔').setEmoji('❌').setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId(`unban_reject_${interaction.user.id}`).setLabel('Rifiuta').setEmoji('❌').setStyle(ButtonStyle.Danger),
         new ButtonBuilder().setCustomId(`unban_ticket_${interaction.user.id}`).setLabel('Apri Ticket').setEmoji('🎟️').setStyle(ButtonStyle.Secondary),
       );
 
@@ -263,7 +268,7 @@ module.exports = {
 
       const staffButtons = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId(`unban_accept_${targetId}`).setLabel('Accetta').setEmoji('✅').setStyle(ButtonStyle.Success),
-        new ButtonBuilder().setCustomId(`unban_reject_${targetId}`).setLabel('𝗥𝗜𝗙𝗜𝗨𝗧𝗔').setEmoji('❌').setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId(`unban_reject_${targetId}`).setLabel('Rifiuta').setEmoji('❌').setStyle(ButtonStyle.Danger),
         new ButtonBuilder().setCustomId(`unban_ticket_${targetId}`).setLabel('Apri Ticket').setEmoji('🎟️').setStyle(ButtonStyle.Secondary),
       );
 
@@ -534,7 +539,7 @@ module.exports = {
 
         const ticketButtons = new ActionRowBuilder().addComponents(
           new ButtonBuilder().setCustomId(`unban_accept_${targetId}`).setLabel('Accetta').setEmoji('✅').setStyle(ButtonStyle.Success),
-          new ButtonBuilder().setCustomId(`unban_reject_${targetId}`).setLabel('𝗥𝗜𝗙𝗜𝗨𝗧𝗔').setEmoji('❌').setStyle(ButtonStyle.Danger),
+          new ButtonBuilder().setCustomId(`unban_reject_${targetId}`).setLabel('Rifiuta').setEmoji('❌').setStyle(ButtonStyle.Danger),
           new ButtonBuilder().setCustomId(`unban_chiudi_${targetId}`).setLabel('𝗖𝗛𝗜𝗨𝗗𝗜').setEmoji('🔒').setStyle(ButtonStyle.Secondary),
         );
         await ticketChannel.send({ embeds: [embed], components: [ticketButtons] });

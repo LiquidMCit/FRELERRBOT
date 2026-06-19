@@ -150,7 +150,7 @@ module.exports = {
         .setDescription('Sei stato bannato dal server.\n\nSe ritieni che il ban sia ingiusto o vuoi spiegare la tua situazione, puoi inviare una richiesta di unban premendo il pulsante qui sotto.\n\n*La tua richiesta verrà valutata dallo staff. Non abusare di questo sistema.*')
         .setFooter({ text: `FrelerrBOT • ${time}` });
       const button = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId('unban_request').setLabel('𝗥𝗜𝗖𝗛𝗜𝗘𝗦𝗧𝗔 𝗨𝗡𝗕𝗔𝗡').setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId('unban_request').setLabel('Richiesta Unban').setStyle(ButtonStyle.Danger),
       );
       await message.channel.send({ embeds: [embed], components: [button] });
       await message.delete().catch(() => {});

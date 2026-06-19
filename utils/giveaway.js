@@ -57,8 +57,8 @@ function buildEndedEmbed(giveaway, host, winnerTags) {
 
 function buildButtons(participantCount, disabled = false) {
   return new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('giveaway_join').setLabel('𝗣𝗔𝗥𝗧𝗘𝗖𝗜𝗣𝗔!').setStyle(ButtonStyle.Danger).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('giveaway_participants').setLabel(`𝗣𝗔𝗥𝗧𝗘𝗖𝗜𝗣𝗔𝗡𝗧𝗜: ${participantCount}`).setEmoji('👥').setStyle(ButtonStyle.Danger).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('giveaway_join').setLabel('Partecipa!').setStyle(ButtonStyle.Danger).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('giveaway_participants').setLabel(`Partecipanti: ${participantCount}`).setEmoji('👥').setStyle(ButtonStyle.Danger).setDisabled(disabled),
   );
 }
 
