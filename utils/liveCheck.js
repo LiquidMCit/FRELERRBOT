@@ -7,13 +7,15 @@ const { LIVE_NOTIF_CHANNEL_ID } = require('../config');
 const STATE_FILE = path.join(__dirname, '../data/liveState.json');
 
 function loadState() {
-  try { return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); }
-  catch { return { twitchId: null, ytId: null, notifKey: null }; }
+  try {
+    const s = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    return { twitchId: null, ytId: null, notifiedTwitchId: null, notifiedYtId: null, ...s };
+  } catch {
+    return { twitchId: null, ytId: null, notifiedTwitchId: null, notifiedYtId: null };
+  }
 }
 
-function saveState(s) {
-  fs.writeFileSync(STATE_FILE, JSON.stringify(s));
-}
+function saveState(s) { fs.writeFileSync(STATE_FILE, JSON.stringify(s)); }
 
 function httpsPost(url, params) {
   return new Promise((resolve, reject) => {
@@ -64,8 +66,9 @@ async function fetchTwitchStream() {
 
 // ── YouTube ───────────────────────────────────────────────────────────
 async function fetchYTLive() {
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${process.env.YOUTUBE_CHANNEL_ID}&eventType=live&type=video&key=${process.env.YOUTUBE_API_KEY}`;
-  const d   = await httpsGet(url);
+  const d = await httpsGet(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${process.env.YOUTUBE_CHANNEL_ID}&eventType=live&type=video&key=${process.env.YOUTUBE_API_KEY}`
+  );
   const item = d.items?.[0];
   if (!item) return null;
   return {
@@ -94,7 +97,6 @@ async function sendCombined(channel, twitch, yt) {
     ].join('\n'))
     .setImage(twitch.thumbnail_url?.replace('{width}', '1280').replace('{height}', '720') + `?t=${Date.now()}`)
     .setFooter({ text: `FrelerrBOT • ${timeStr()}` });
-
   await channel.send({ content: '@everyone 📽️ Frelerr è live su **Twitch** e **YouTube** contemporaneamente!', embeds: [embed] });
 }
 
@@ -106,7 +108,6 @@ async function sendTwitchOnly(channel, stream) {
     .setDescription(`**${stream.title}**\n\n🟣 https://twitch.tv/${process.env.TWITCH_USERNAME}`)
     .setImage(thumbnail)
     .setFooter({ text: `FrelerrBOT • ${timeStr()}` });
-
   await channel.send({ content: '@everyone 📽️ Live su Twitch iniziata!', embeds: [embed] });
 }
 
@@ -117,47 +118,68 @@ async function sendYTOnly(channel, live) {
     .setDescription(`**${live.title}**\n\n🔴 ${live.url}`)
     .setImage(live.thumbnail)
     .setFooter({ text: `FrelerrBOT • ${timeStr()}` });
-
   await channel.send({ content: '@everyone 📽️ Live su YouTube iniziata!', embeds: [embed] });
 }
 
 // ── Check principale ──────────────────────────────────────────────────
+// Logica: invia notifica SOLO quando una piattaforma diventa NUOVAMENTE live
+// (ID diverso da quello già notificato). Ignora quando va offline.
 async function checkLive(client) {
   const state = loadState();
 
-  // Usa Promise.allSettled: rejected = errore API → non toccare lo stato per quella piattaforma
   const [tr, yr] = await Promise.allSettled([fetchTwitchStream(), fetchYTLive()]);
-
-  // Se entrambe le API sono crashate, salta questo ciclo senza toccare nulla
   if (tr.status === 'rejected' && yr.status === 'rejected') return;
 
-  // Se l'API ha risposto (anche con null = offline), aggiorna lo stato per quella piattaforma
-  // Se l'API ha crashato, usa l'ultimo valore noto per evitare falsi reset
-  const twitchId = tr.status === 'fulfilled' ? (tr.value?.id ?? null) : (state.twitchId ?? null);
-  const ytId     = yr.status === 'fulfilled' ? (yr.value?.id ?? null) : (state.ytId     ?? null);
+  // Se l'API risponde → aggiorna stato. Se crasha → tieni l'ultimo valore noto.
+  const curTwitch = tr.status === 'fulfilled' ? (tr.value?.id ?? null) : state.twitchId;
+  const curYT     = yr.status === 'fulfilled' ? (yr.value?.id ?? null) : state.ytId;
 
-  if (tr.status === 'fulfilled') state.twitchId = twitchId;
-  if (yr.status === 'fulfilled') state.ytId     = ytId;
+  if (tr.status === 'fulfilled') state.twitchId = curTwitch;
+  if (yr.status === 'fulfilled') state.ytId = curYT;
 
-  const key = `T${twitchId ?? '0'}_Y${ytId ?? '0'}`;
+  // Quando una piattaforma va offline (confermato dall'API), resetta il suo ID notificato
+  // così la prossima live ripartirà con notifica fresca
+  if (tr.status === 'fulfilled' && !curTwitch) state.notifiedTwitchId = null;
+  if (yr.status === 'fulfilled' && !curYT) state.notifiedYtId = null;
 
-  // Nessun cambiamento → salva stati aggiornati e basta
-  if (key === state.notifKey) { saveState(state); return; }
+  // Una piattaforma è "nuova" solo se ha un ID live che non abbiamo ancora notificato
+  const newTwitch = !!(curTwitch && curTwitch !== state.notifiedTwitchId);
+  const newYT     = !!(curYT     && curYT     !== state.notifiedYtId);
+
+  if (!newTwitch && !newYT) { saveState(state); return; }
 
   const channel = client.channels.cache.get(LIVE_NOTIF_CHANNEL_ID);
 
-  if (twitchId && ytId) {
-    const ts = tr.value, yl = yr.value;
-    if (channel && ts && yl) await sendCombined(channel, ts, yl);
-  } else if (twitchId) {
-    const ts = tr.value;
-    if (channel && ts) await sendTwitchOnly(channel, ts);
-  } else if (ytId) {
-    const yl = yr.value;
-    if (channel && yl) await sendYTOnly(channel, yl);
+  if (newTwitch && newYT) {
+    if (channel) await sendCombined(channel, tr.value, yr.value);
+    state.notifiedTwitchId = curTwitch;
+    state.notifiedYtId     = curYT;
+  } else if (newTwitch) {
+    if (curYT) {
+      // Twitch nuova, YT già live → combined
+      const ytData = yr.status === 'fulfilled' ? yr.value : null;
+      if (channel && ytData) await sendCombined(channel, tr.value, ytData);
+      else if (channel) await sendTwitchOnly(channel, tr.value);
+      state.notifiedTwitchId = curTwitch;
+      state.notifiedYtId     = curYT;
+    } else {
+      if (channel) await sendTwitchOnly(channel, tr.value);
+      state.notifiedTwitchId = curTwitch;
+    }
+  } else if (newYT) {
+    if (curTwitch) {
+      // YT nuova, Twitch già live → combined
+      const twData = tr.status === 'fulfilled' ? tr.value : null;
+      if (channel && twData) await sendCombined(channel, twData, yr.value);
+      else if (channel) await sendYTOnly(channel, yr.value);
+      state.notifiedYtId     = curYT;
+      state.notifiedTwitchId = curTwitch;
+    } else {
+      if (channel) await sendYTOnly(channel, yr.value);
+      state.notifiedYtId = curYT;
+    }
   }
 
-  state.notifKey = (twitchId || ytId) ? key : null;
   saveState(state);
 }
 
