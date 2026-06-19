@@ -1,0 +1,58 @@
+{
+  "1506261844849983518": {
+    "lines": [
+      "[13:46:49] FrelerrBOT: [embed]",
+      "[13:47:23] FrelerrBOT: <@&1506257822449406022> **DEVELOPER • Pigia** Ha preso il Ticket.",
+      "[13:47:27] FrelerrBOT: 🔒 Chiusura ticket in corso..."
+    ],
+    "category": "account",
+    "creatorId": "1380199919918518434",
+    "closedAt": 1779191247357
+  },
+  "1506262153189916775": {
+    "lines": [
+      "[13:48:02] FrelerrBOT: [embed]",
+      "[13:48:08] FrelerrBOT: 🔒 Chiusura ticket in corso..."
+    ],
+    "category": "player",
+    "creatorId": "1380199919918518434",
+    "closedAt": 1779191287900
+  },
+  "1506262220752031886": {
+    "lines": [
+      "[13:48:18] FrelerrBOT: [embed]",
+      "[13:48:33] FrelerrBOT: 🔒 Chiusura ticket in corso..."
+    ],
+    "category": "bug",
+    "creatorId": "1380199919918518434",
+    "closedAt": 1779191312631
+  },
+  "1506262342609010718": {
+    "lines": [
+      "[13:48:47] FrelerrBOT: [embed]",
+      "[13:49:48] FrelerrBOT: 🔒 Chiusura ticket in corso..."
+    ],
+    "category": "collab",
+    "creatorId": "1380199919918518434",
+    "closedAt": 1779191387789
+  },
+  "1507400545441415319": {
+    "lines": [
+      "[17:11:36] FrelerrBOT: [embed]",
+      "[17:11:58] pigiazza: LUCA",
+      "[17:11:59] pigiazza: DAI",
+      "[17:12:03] FrelerrBOT: <@&1506257822449406022> **DEVELOPER • Pigia** Ha preso il Ticket.",
+      "[17:12:05] pigiazza: PARLA QUI",
+      "[17:12:10] pigiazza: <@1124333632799125624>",
+      "[17:12:18] luc41304: percheà",
+      "[17:12:23] pigiazza: sei gay",
+      "[17:12:34] luc41304: 👎",
+      "[17:13:28] luc41304: sbannami",
+      "[17:13:32] luc41304: bravo",
+      "[17:13:34] FrelerrBOT: 🔒 Chiusura ticket in corso..."
+    ],
+    "category": "player",
+    "creatorId": "1380199919918518434",
+    "closedAt": 1779462813774
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "1506261844849983518": {
+    "creatorId": "1380199919918518434",
+    "category": "account",
+    "formData": {
+      "problema": "fd",
+      "da_quando": "f"
+    },
+    "staffId": "1380199919918518434",
+    "taken": true,
+    "closed": true,
+    "lastMessage": 1779191208063,
+    "warningSent": false,
+    "guildId": "1429445691452948524"
+  },
+  "1506262153189916775": {
+    "creatorId": "1380199919918518434",
+    "category": "player",
+    "formData": {
+      "username": "d",
+      "motivo": "d",
+      "prove": "d"
+    },
+    "staffId": null,
+    "taken": false,
+    "closed": true,
+    "lastMessage": 1779191281620,
+    "warningSent": false,
+    "guildId": "1429445691452948524"
+  },
+  "1506262220752031886": {
+    "creatorId": "1380199919918518434",
+    "category": "bug",
+    "formData": {
+      "descrizione": "d",
+      "riproduci": "d"
+    },
+    "staffId": null,
+    "taken": false,
+    "closed": true,
+    "lastMessage": 1779191297772,
+    "warningSent": false,
+    "guildId": "1429445691452948524"
+  },
+  "1506262342609010718": {
+    "creatorId": "1380199919918518434",
+    "category": "collab",
+    "formData": {
+      "tipo": "d",
+      "descrizione": "d"
+    },
+    "staffId": null,
+    "taken": false,
+    "closed": true,
+    "lastMessage": 1779191326721,
+    "warningSent": false,
+    "guildId": "1429445691452948524"
+  },
+  "1506262941530587146": {
+    "creatorId": "1380199919918518434",
+    "category": "bug",
+    "formData": {
+      "descrizione": "jj",
+      "riproduci": "j"
+    },
+    "staffId": null,
+    "taken": false,
+    "closed": true,
+    "lastMessage": 1779191469484,
+    "warningSent": false,
+    "guildId": "1429445691452948524",
+    "closedAt": 1779301232126,
+    "closedBy": "auto-sync"
+  },
+  "1506723371264508005": {
+    "creatorId": "1380199919918518434",
+    "category": "player",
+    "formData": {
+      "username": "d",
+      "motivo": "d",
+      "prove": "d"
+    },
+    "staffId": null,
+    "taken": false,
+    "closed": true,
+    "lastMessage": 1779301292257,
+    "warningSent": false,
+    "guildId": "1429445691452948524",
+    "closedBy": "1380199919918518434",
+    "closedAt": 1779301300781
+  },
+  "1507400545441415319": {
+    "creatorId": "1380199919918518434",
+    "category": "player",
+    "formData": {
+      "username": "luca",
+      "motivo": "è gay",
+      "prove": "è gay"
+    },
+    "staffId": "1380199919918518434",
+    "taken": true,
+    "closed": true,
+    "lastMessage": 1779462811922,
+    "warningSent": false,
+    "guildId": "1429445691452948524"
+  }
+}
